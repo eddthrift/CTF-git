@@ -14,7 +14,8 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using System.Windows.Threading;
+using CTFSimulation.Objects;
 using CTFSimulation.Tools;
 
 namespace CTFSimulation
@@ -24,52 +25,48 @@ namespace CTFSimulation
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _isRunning;
         private static Timer _timer;
-
-        private int _x;
-        private int _y;
 
         public MainWindow()
         {
             InitializeComponent();
-            DrawingTool.SetupDrawingTool(ref Field);
+            this.Loaded += SetupSimulation;
+        }
 
-            _isRunning = false;
+        void SetupSimulation(object sender, RoutedEventArgs e)
+        {
+            DrawingTool.SetupDrawingTool(ref Field);
+            Simulation.SetupSimulation(1, ref Field);
+
             SetTimer();
         }
 
         private void SetTimer()
         {
-            _timer = new Timer(500);
+            _timer = new Timer(10);
             _timer.AutoReset = true;
             _timer.Elapsed += OnTimedEvent;
         }
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            _x += 10;
             Dispatcher.Invoke(() =>
             {
                 DrawingTool.ClearCanvas();
-                DrawingTool.DrawCircle(10, Brushes.Red, new Vector(_x, _y));
-            }, System.Windows.Threading.DispatcherPriority.Normal);
+                Simulation.Simulate();
+                Simulation.Draw();
+            }, DispatcherPriority.Normal);
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_isRunning)
+            if (_timer.Enabled)
             {
-                _isRunning = false;
                 _timer.Enabled = false;
-                RunButton.Content = "Run";
+                RunButton.Content = "Start";
             }
             else
             {
-                _x = 0;
-                _y = 200;
-
-                _isRunning = true;
                 _timer.Enabled = true;
                 RunButton.Content = "Pause";
             }
