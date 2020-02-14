@@ -10,9 +10,12 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+
+using CTFSimulation.Tools;
 
 namespace CTFSimulation
 {
@@ -29,11 +32,11 @@ namespace CTFSimulation
 
         public MainWindow()
         {
-            SetTimer();
-            _isRunning = false;
             InitializeComponent();
-            _x = 0;
-            _y = 0;
+            DrawingTool.SetupDrawingTool(ref Field);
+
+            _isRunning = false;
+            SetTimer();
         }
 
         private void SetTimer()
@@ -45,15 +48,12 @@ namespace CTFSimulation
 
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            _x++;
-            _y++;
+            _x += 10;
             Dispatcher.Invoke(() =>
             {
-                ClearCanvas();
-                DrawCircle();
+                DrawingTool.ClearCanvas();
+                DrawingTool.DrawCircle(10, Brushes.Red, new Vector(_x, _y));
             }, System.Windows.Threading.DispatcherPriority.Normal);
-
-
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)
@@ -66,25 +66,13 @@ namespace CTFSimulation
             }
             else
             {
+                _x = 0;
+                _y = 200;
+
                 _isRunning = true;
                 _timer.Enabled = true;
                 RunButton.Content = "Pause";
             }
-        }
-
-        private void DrawCircle()
-        {
-            var circle = new Ellipse();
-            circle.Width = 10;
-            circle.Height = 10;
-            Canvas.SetLeft(circle, _x);
-            Canvas.SetBottom(circle, _y);
-            Field.Children.Add(circle);
-        }
-
-        private void ClearCanvas()
-        {
-            Field.Children.Clear();
         }
     }
 }
