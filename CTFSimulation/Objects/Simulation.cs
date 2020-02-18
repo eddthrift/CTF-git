@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using CTFSimulation.Interfaces;
 using CTFSimulation.Tools;
 
@@ -36,11 +35,7 @@ namespace CTFSimulation.Objects
         {
             foreach (IPlayer player in Players)
             {
-                var colour = Brushes.Red;
-                if (player.Team == PlayerTeam.Blue)
-                    colour = Brushes.Blue;
-
-                DrawingTool.DrawCircle(10, colour, player.Position);
+                DrawingTool.DrawCircle(10, DrawingTool.ChooseBrushColour(player.Team), player.Position);
             }
         }
 

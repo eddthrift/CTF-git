@@ -20,4 +20,11 @@ namespace CTFSimulation.Tools
         Red,
         Blue
     }
+
+    public enum SimulationState
+    {
+        Running,
+        BlueWin,
+        RedWin
+    }
 }
