@@ -36,5 +36,20 @@ namespace CTFSimulation.Tools
         {
             _canvas.Children.Clear();
         }
+
+        public static SolidColorBrush ChooseBrushColour(PlayerTeam team)
+        {
+            switch (team)
+            {
+                case PlayerTeam.Red:
+                    return Brushes.Red;
+
+                case PlayerTeam.Blue:
+                    return Brushes.Blue;
+
+                default:
+                    return Brushes.Black;
+            }
+        }
     }
 }
