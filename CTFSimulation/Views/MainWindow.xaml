@@ -1,9 +1,9 @@
-﻿<Window x:Class="CTFSimulation.MainWindow"
+﻿<Window x:Class="CTFSimulation.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CTFSimulation"
+        xmlns:local="clr-namespace:CTFSimulation.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Background="Black">
@@ -11,6 +11,6 @@
                 Background="Green"
                 Margin="50,50,200,50">
         </Canvas>
-        <Button Name="RunButton" Content="Start" HorizontalAlignment="Right" Margin="0,0,50,30" VerticalAlignment="Bottom" Width="75" Click="RunButton_Click"/>
+        <Button Name="RunButton" Content="Run" HorizontalAlignment="Right" Margin="0,0,50,30" VerticalAlignment="Bottom" Width="75" Click="RunButton_Click"/>
     </Grid>
 </Window>

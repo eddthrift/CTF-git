@@ -5,25 +5,22 @@ using System.Windows.Controls;
 using CTFSimulation.Interfaces;
 using CTFSimulation.Tools;
 
-namespace CTFSimulation.Objects
+namespace CTFSimulation.Models
 {
-    static class Simulation
+    public class Game
     {
-        public static List<IPlayer> Players;
-        public static Canvas Field;
+        public List<IPlayer> Players;
+        public Canvas Field;
 
-        static Simulation()
+        public Game(int playersPerTeam, ref Canvas field)
         {
             Players = new List<IPlayer>();
-        }
 
-        public static void SetupSimulation(int playersPerTeam, ref Canvas field)
-        {
             Field = field;
             CreatePlayers(playersPerTeam);
         }
 
-        public static void Simulate()
+        public void Tick()
         {
             foreach (IPlayer player in Players.OrderBy(p => p.PlayerId))
             {
@@ -31,15 +28,7 @@ namespace CTFSimulation.Objects
             }
         }
 
-        public static void Draw()
-        {
-            foreach (IPlayer player in Players)
-            {
-                DrawingTool.DrawCircle(10, DrawingTool.ChooseBrushColour(player.Team), player.Position);
-            }
-        }
-
-        private static void CreatePlayers(int playersPerTeam)
+        private void CreatePlayers(int playersPerTeam)
         {
             for (int i = 0; i < playersPerTeam; i++)
             {

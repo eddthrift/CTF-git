@@ -3,7 +3,7 @@ using CTFSimulation.Tools;
 
 namespace CTFSimulation.Interfaces
 {
-    interface IPlayer
+    public interface IPlayer
     {
        Vector Position { get; set; }
        Vector Velocity { get; set; }
