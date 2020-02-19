@@ -17,7 +17,7 @@ namespace CTFSimulation.Views
         void SetupSimulation(object sender, RoutedEventArgs e)
         {
             DrawingTool.SetupDrawingTool(ref Field);
-            _simulation = new SimulationViewModel(ref Field);
+            _simulation = new SimulationViewModel(ref Field, 10);
         }
 
         private void RunButton_Click(object sender, RoutedEventArgs e)

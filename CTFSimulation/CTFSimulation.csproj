@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Models\Game.cs" />
+    <Compile Include="Models\PlayerInfo.cs" />
     <Compile Include="Tools\Enums.cs" />
     <Compile Include="ViewModels\SimulationViewModel.cs" />
     <Page Include="Views\MainWindow.xaml">

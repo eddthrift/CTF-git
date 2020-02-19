@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,48 +12,71 @@ namespace CTFSimulation.ViewModels
 {
     public class SimulationViewModel
     {
-        private readonly Timer _timer;
+        private readonly DispatcherTimer _uiTimer;
+        private readonly Timer _simTimer;
         private Game _game;
+        private IList<PlayerInfo> _playerInfo;
 
-        public SimulationViewModel(ref Canvas field)
+        public SimulationViewModel(ref Canvas field, int refreshPeriodMs)
         {
             _game = new Game(1, ref field);
+            _playerInfo = new List<PlayerInfo>();
 
-            _timer = new Timer(10);
-            _timer.Enabled = false;
-            _timer.AutoReset = true;
-            _timer.Elapsed += OnTimedEvent;
+            _simTimer = new Timer(refreshPeriodMs);
+            _simTimer.AutoReset = false;
+            _simTimer.Elapsed += Simulate;
+
+            _uiTimer = new DispatcherTimer(DispatcherPriority.Render, Application.Current.Dispatcher);
+            _uiTimer.Interval = TimeSpan.FromMilliseconds(33); // ~30fps
+            _uiTimer.IsEnabled = false;
+            _uiTimer.Tick += UpdateUI;
         }
         
-        public void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                DrawingTool.ClearCanvas();
-                _game.Tick();
-                DrawPlayers();
-            }, DispatcherPriority.Normal);
-        }
-
         public void StartTimer()
         {
-            _timer.Enabled = true;
+            _simTimer.Start();
+            _uiTimer.Start();
         }
 
         public void StopTimer()
         {
-            _timer.Enabled = false;
+            _simTimer.Stop();
+            _uiTimer.Stop();
         }
 
         public bool IsTimerEnabled()
         {
-            return _timer.Enabled;
+            return _simTimer.Enabled;
         }
-        public void DrawPlayers()
+
+        private void Simulate(object source, ElapsedEventArgs e)
         {
-            foreach (IPlayer player in _game.Players)
+            _game.Tick();
+
+            UpdatePlayerInfo();
+            _simTimer.Start();
+        }
+
+        private void UpdateUI(object sender, EventArgs e)
+        {
+            DrawingTool.ClearCanvas();
+            DrawPlayers();
+        }
+
+        private void DrawPlayers()
+        {
+            foreach (PlayerInfo player in _playerInfo)
             {
                 DrawingTool.DrawCircle(10, DrawingTool.ChooseBrushColour(player.Team), player.Position);
+            }
+        }
+
+        private void UpdatePlayerInfo()
+        {
+            _playerInfo = new List<PlayerInfo>();
+            foreach(IPlayer player in _game.Players)
+            {
+                _playerInfo.Add(new PlayerInfo(player.PlayerId, player.Team, player.Position));
             }
         }
     }
