@@ -15,12 +15,13 @@ namespace CTFSimulation.ViewModels
         private readonly DispatcherTimer _uiTimer;
         private readonly Timer _simTimer;
         private Game _game;
-        private IList<PlayerInfo> _playerInfo;
+        private IList<ObjectInfo> _playerInfo;
 
         public SimulationViewModel(ref Canvas field, int refreshPeriodMs)
         {
-            _game = new Game(1, ref field);
-            _playerInfo = new List<PlayerInfo>();
+            _game = new Game(ref field);
+
+            _playerInfo = new List<ObjectInfo>();
 
             _simTimer = new Timer(refreshPeriodMs);
             _simTimer.AutoReset = false;
@@ -31,7 +32,12 @@ namespace CTFSimulation.ViewModels
             _uiTimer.IsEnabled = false;
             _uiTimer.Tick += UpdateUI;
         }
-        
+
+        public void Initialise(int playersPerTeam)
+        {
+            _game.Initialise(playersPerTeam);
+        }
+
         public void StartTimer()
         {
             _simTimer.Start();
@@ -65,7 +71,7 @@ namespace CTFSimulation.ViewModels
 
         private void DrawPlayers()
         {
-            foreach (PlayerInfo player in _playerInfo)
+            foreach (ObjectInfo player in _playerInfo)
             {
                 DrawingTool.DrawCircle(10, DrawingTool.ChooseBrushColour(player.Team), player.Position);
             }
@@ -73,10 +79,11 @@ namespace CTFSimulation.ViewModels
 
         private void UpdatePlayerInfo()
         {
-            _playerInfo = new List<PlayerInfo>();
+            _playerInfo = new List<ObjectInfo>();
+
             foreach(IPlayer player in _game.Players)
             {
-                _playerInfo.Add(new PlayerInfo(player.PlayerId, player.Team, player.Position));
+                _playerInfo.Add(new ObjectInfo(player.PlayerId, player.Team, player.Position, player.State, ObjectType.Player));
             }
         }
     }

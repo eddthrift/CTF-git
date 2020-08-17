@@ -55,9 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interfaces\IObject.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
+    <Compile Include="Models\Flag.cs" />
     <Compile Include="Models\Game.cs" />
-    <Compile Include="Models\PlayerInfo.cs" />
+    <Compile Include="Models\ObjectInfo.cs" />
     <Compile Include="Tools\Enums.cs" />
     <Compile Include="ViewModels\SimulationViewModel.cs" />
     <Page Include="Views\MainWindow.xaml">

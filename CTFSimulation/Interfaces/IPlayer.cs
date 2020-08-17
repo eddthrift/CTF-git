@@ -3,13 +3,10 @@ using CTFSimulation.Tools;
 
 namespace CTFSimulation.Interfaces
 {
-    public interface IPlayer
+    public interface IPlayer: IObject
     {
-       Vector Position { get; set; }
-       Vector Velocity { get; set; }
-       PlayerState State { get; set; }
-       PlayerTeam Team { get; }
-       int PlayerId { get; }
+        Vector Velocity { get; set; }
+        int PlayerId { get; }
 
        void MovePlayer();
     }

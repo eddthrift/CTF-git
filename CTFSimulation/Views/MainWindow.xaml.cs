@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows;
 using CTFSimulation.Tools;
 using CTFSimulation.ViewModels;
 
@@ -8,19 +11,22 @@ namespace CTFSimulation.Views
     {
         private SimulationViewModel _simulation;
 
-        public MainWindow()
+        public MainWindow(int height = 450, int width = 800)
         {
             InitializeComponent();
+            this.Height = height;
+            this.Width = width;
+
             this.Loaded += SetupSimulation;
         }
 
         void SetupSimulation(object sender, RoutedEventArgs e)
         {
-            DrawingTool.SetupDrawingTool(ref Field);
-            _simulation = new SimulationViewModel(ref Field, 10);
+            DrawingTool.SetupDrawingTool(ref fieldCanvas);
+            _simulation = new SimulationViewModel(ref fieldCanvas, 10);
         }
 
-        private void RunButton_Click(object sender, RoutedEventArgs e)
+        private void RunButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (_simulation.IsTimerEnabled())
             {
@@ -31,6 +37,38 @@ namespace CTFSimulation.Views
             {
                 _simulation.StartTimer();
                 RunButton.Content = "Pause";
+            }
+        }
+
+        private void InitialiseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var playersPerTeam = ValidatePlayerTextBox();
+
+            if (playersPerTeam != null)
+            {
+                _simulation.Initialise(playersPerTeam.Value);
+            }
+        }
+
+        private int? ValidatePlayerTextBox()
+        {
+            if (int.TryParse(PlayersTextBox.Text, out int numberOfPlayers) && numberOfPlayers != 0)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    PlayersValidationLabel.Visibility = Visibility.Hidden;
+                }));
+
+                return numberOfPlayers;
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    PlayersValidationLabel.Visibility = Visibility.Visible;
+                }));
+
+                return null;
             }
         }
     }

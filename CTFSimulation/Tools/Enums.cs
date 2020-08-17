@@ -1,18 +1,27 @@
 ﻿namespace CTFSimulation.Tools
 {
-    public enum PlayerState
+    public enum ObjectState
     {
         Idle,
         Attacking,
         Defending,
         ReturningToBase,
-        CarryingFlag
+        CarryingFlag,
+        FlagInBase,
+        FlagCarried
     }
 
-    public enum PlayerTeam
+    public enum ObjectTeam
     {
         Red,
-        Blue
+        Blue,
+        Neutral
+    }
+
+    public enum ObjectType
+    {
+        Player,
+        Flag
     }
 
     public enum SimulationState
