@@ -7,13 +7,15 @@ namespace CTFSimulation.Models
 {
     public class Flag : IObject
     {
-        public Flag(Vector position, ObjectTeam team, ObjectState state)
+        public Flag(int id, Vector position, ObjectTeam team, ObjectState state)
         {
+            Id = Id;
             Position = position;
             Team = team;
             State = state;
         }
 
+        public int Id { get; }
         public Vector Position { get; set; }
         public ObjectState State { get; set; }
         public ObjectTeam Team { get; }

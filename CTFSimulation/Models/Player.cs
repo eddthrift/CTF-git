@@ -12,22 +12,22 @@ namespace CTFSimulation.Models
         private Vector _velocity;
         private double _maxSpeed;
 
-        public Player(int playerId, ObjectTeam team)
+        public Player(int id, ObjectTeam team)
         {
             _maxSpeed = 10;
             State = ObjectState.Idle;
             Team = team;
-            PlayerId = playerId;
+            Id = id;
             Position = new Vector(0, 0);
             Velocity = new Vector(0, 0);
         }
 
-        public Player(int playerId, ObjectTeam team, Vector position)
+        public Player(int id, ObjectTeam team, Vector position)
         {
             _maxSpeed = 10;
             State = ObjectState.Idle;
             Team = team;
-            PlayerId = playerId;
+            Id = id;
             Position = position;
             Velocity = new Vector(0, 0);
         }
@@ -43,9 +43,9 @@ namespace CTFSimulation.Models
             }
         }
         public ObjectState State { get; set; }
-        public ObjectTeam Team { get; private set; }
+        public ObjectTeam Team { get; }
         public ObjectType Type => ObjectType.Player;
-        public int PlayerId { get; private set; }
+        public int Id { get; }
 
         public void MovePlayer()
         {
@@ -53,7 +53,7 @@ namespace CTFSimulation.Models
             Position += Velocity;
         }
 
-        public void MovePlayer(IList<ObjectInfo> playerInfo)
+        public void MovePlayer(IList<IObject> playerInfo)
         {
             switch (State)
             {
@@ -74,7 +74,7 @@ namespace CTFSimulation.Models
 
         }
 
-        private void AssessState(IList<ObjectInfo> playerInfo)
+        private void AssessState(IList<IObject> playerInfo)
         {
             var numAttacking = playerInfo.Count(player => player.State == ObjectState.Attacking && player.Team == Team);
             var numDefending = playerInfo.Count(player => player.State == ObjectState.Defending && player.Team == Team);

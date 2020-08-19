@@ -48,28 +48,21 @@ namespace CTFSimulation.Views
             {
                 _simulation.Initialise(playersPerTeam.Value);
             }
+
+            RunButton.IsEnabled = true;
         }
 
         private int? ValidatePlayerTextBox()
         {
             if (int.TryParse(PlayersTextBox.Text, out int numberOfPlayers) && numberOfPlayers != 0)
             {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    PlayersValidationLabel.Visibility = Visibility.Hidden;
-                }));
-
+                PlayersValidationLabel.Visibility = Visibility.Hidden;
                 return numberOfPlayers;
             }
-            else
-            {
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    PlayersValidationLabel.Visibility = Visibility.Visible;
-                }));
 
-                return null;
-            }
+            PlayersValidationLabel.Visibility = Visibility.Visible;
+
+            return null;
         }
     }
 }

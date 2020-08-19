@@ -15,7 +15,7 @@
                 Background="Green"
                 Margin="50,50,200.2,49.8" Grid.ColumnSpan="2">
         </Canvas>
-        <Button x:Name="RunButton" Content="Run" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,50,30"  Width="75" Click="RunButton_OnClick" Grid.Column="1"/>
+        <Button x:Name="RunButton" Content="Run" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,50,30"  Width="75" Click="RunButton_OnClick" Grid.Column="1" IsEnabled="False"/>
         <Button x:Name="InitialiseButton" Content="Initialise" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,50,55"  Width="75" Click="InitialiseButton_OnClick" Grid.Column="1"/>
         <TextBox x:Name="PlayersTextBox" Text="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="373.6,36,0,0" Height="23"  TextWrapping="Wrap"  Width="70" IsEnabled="True" Grid.Column="1"/>
         <Label x:Name="PlayersLabel" Content="Players Per Team" HorizontalAlignment="Left" Height="23" Margin="276.6,36,0,0" VerticalAlignment="Top" Width="92" Foreground="White" FontSize="11" Grid.Column="1"/>

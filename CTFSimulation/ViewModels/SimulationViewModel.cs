@@ -15,13 +15,13 @@ namespace CTFSimulation.ViewModels
         private readonly DispatcherTimer _uiTimer;
         private readonly Timer _simTimer;
         private Game _game;
-        private IList<ObjectInfo> _playerInfo;
+        private IList<IObject> _objectInfo;
 
         public SimulationViewModel(ref Canvas field, int refreshPeriodMs)
         {
             _game = new Game(ref field);
 
-            _playerInfo = new List<ObjectInfo>();
+            _objectInfo = new List<IObject>();
 
             _simTimer = new Timer(refreshPeriodMs);
             _simTimer.AutoReset = false;
@@ -59,7 +59,7 @@ namespace CTFSimulation.ViewModels
         {
             _game.Tick();
 
-            UpdatePlayerInfo();
+            UpdateObjectInfo();
             _simTimer.Start();
         }
 
@@ -71,19 +71,31 @@ namespace CTFSimulation.ViewModels
 
         private void DrawPlayers()
         {
-            foreach (ObjectInfo player in _playerInfo)
+            foreach (IObject sprite in _objectInfo)
             {
-                DrawingTool.DrawCircle(10, DrawingTool.ChooseBrushColour(player.Team), player.Position);
+                switch (sprite.Type)
+                {
+                    case ObjectType.Player:
+                        DrawingTool.DrawCircle(10, sprite.Team, sprite.Position);
+                        break;
+
+                    case ObjectType.Flag: 
+                        DrawingTool.DrawFlag(10, sprite.Team, sprite.Position);
+                        break;
+                }
             }
         }
 
-        private void UpdatePlayerInfo()
+        private void UpdateObjectInfo()
         {
-            _playerInfo = new List<ObjectInfo>();
+            _objectInfo = new List<IObject>();
 
-            foreach(IPlayer player in _game.Players)
+            _objectInfo.Add(_game.RedFlag);
+            _objectInfo.Add(_game.BlueFlag);
+
+            foreach (IPlayer player in _game.Players)
             {
-                _playerInfo.Add(new ObjectInfo(player.PlayerId, player.Team, player.Position, player.State, ObjectType.Player));
+                _objectInfo.Add(player);
             }
         }
     }
