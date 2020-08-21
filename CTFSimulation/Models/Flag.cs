@@ -11,12 +11,14 @@ namespace CTFSimulation.Models
         {
             Id = Id;
             Position = position;
+            InitialPosition = position;
             Team = team;
             State = state;
         }
 
         public int Id { get; }
         public Vector Position { get; set; }
+        public Vector InitialPosition { get; }
         public ObjectState State { get; set; }
         public ObjectTeam Team { get; }
         public ObjectType Type => ObjectType.Flag;

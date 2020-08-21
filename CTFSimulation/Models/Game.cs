@@ -11,8 +11,7 @@ namespace CTFSimulation.Models
     {
         public List<IPlayer> Players;
         public Canvas Field;
-        public Flag BlueFlag;
-        public Flag RedFlag;
+        public List<Flag> Flags;
 
         public Game(ref Canvas field)
         {
@@ -22,6 +21,7 @@ namespace CTFSimulation.Models
 
         public void Initialise(int playersPerTeam)
         {
+            Players = new List<IPlayer>();
             CreatePlayers(playersPerTeam);
             SetupFlags();
         }
@@ -30,7 +30,7 @@ namespace CTFSimulation.Models
         {
             foreach (IPlayer player in Players.OrderBy(p => p.Id))
             {
-                player.MovePlayer();
+                player.Move();
             }
         }
 
@@ -42,8 +42,8 @@ namespace CTFSimulation.Models
             var redFlagPosition = new Vector(10, height / 2);
             var blueFlagPosition = new Vector(width - 10, height/2);
 
-            RedFlag = new Flag(1, redFlagPosition, ObjectTeam.Red, ObjectState.FlagInBase);
-            BlueFlag = new Flag(2, blueFlagPosition, ObjectTeam.Blue, ObjectState.FlagInBase);
+            Flags.Add(new Flag(1, redFlagPosition, ObjectTeam.Red, ObjectState.FlagInBase));
+            Flags.Add(new Flag(2, blueFlagPosition, ObjectTeam.Blue, ObjectState.FlagInBase));
         }
 
         private void CreatePlayers(int playersPerTeam)

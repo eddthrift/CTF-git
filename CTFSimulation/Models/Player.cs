@@ -10,6 +10,7 @@ namespace CTFSimulation.Models
     public class Player : IPlayer
     {
         private Vector _velocity;
+        private Vector _targetPosition;
         private double _maxSpeed;
 
         public Player(int id, ObjectTeam team)
@@ -47,37 +48,73 @@ namespace CTFSimulation.Models
         public ObjectType Type => ObjectType.Player;
         public int Id { get; }
 
-        public void MovePlayer()
+        public void Move()
         {
             Velocity = new Vector(5,0);
             Position += Velocity;
         }
 
-        public void MovePlayer(IList<IObject> playerInfo)
+        public void Move(IList<IObject> players, IList<Flag> flags)
+        {
+            AssessState(players);
+            PickTarget(players, flags);
+        }
+
+        private void PickTarget(IList<IObject> players, IList<Flag> flags)
         {
             switch (State)
             {
                 case ObjectState.ReturningToBase:
-                    //return to base
-                    break;
-
                 case ObjectState.CarryingFlag:
-                    //carry flag
+                    TargetBase(flags);
                     break;
 
-                default:
-                    AssessState(playerInfo);
-                    //Decide what to do
-                    //Move
+                case ObjectState.Attacking:
+                    TargetFlag(flags);
+                    break;
+
+                case ObjectState.Defending:
+                    TargetAttacker(players, flags);
                     break;
             }
 
         }
 
-        private void AssessState(IList<IObject> playerInfo)
+        private void TargetBase(IList<Flag> flags)
         {
-            var numAttacking = playerInfo.Count(player => player.State == ObjectState.Attacking && player.Team == Team);
-            var numDefending = playerInfo.Count(player => player.State == ObjectState.Defending && player.Team == Team);
+            _targetPosition = flags.Single(flag => flag.Team == Team).InitialPosition;
+        }
+
+        private void TargetFlag(IList<Flag> flags)
+        {
+            _targetPosition = flags.Single(flag => flag.Team != Team).InitialPosition;
+        }
+
+        private void TargetAttacker(IList<IObject> players, IList<Flag> flags)
+        {
+            //Look for enemy players in the attacking state
+            var attackers = players.Where(player => player.Team != Team && player.State == ObjectState.Attacking);
+
+            //Weigh up: closest player / attacker nearest flag / attacker furthest away from another defender
+            foreach (var attacker in attackers)
+            {
+                var distanceToPlayer = (attacker.Position - Position).Length;
+
+                var ownFlag = flags.Single(flag => flag.Team == Team);
+
+                var distanceToFlag = (ownFlag.Position = attacker.Position).Length;
+            }
+        }
+
+        private void AttackerMove()
+        {
+            //Check if defender in way ~ distance normal to line between target and attacker
+        }
+
+        private void AssessState(IList<IObject> players)
+        {
+            var numAttacking = players.Count(player => player.State == ObjectState.Attacking && player.Team == Team);
+            var numDefending = players.Count(player => player.State == ObjectState.Defending && player.Team == Team);
 
             switch (State)
             {

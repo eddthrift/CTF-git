@@ -90,8 +90,10 @@ namespace CTFSimulation.ViewModels
         {
             _objectInfo = new List<IObject>();
 
-            _objectInfo.Add(_game.RedFlag);
-            _objectInfo.Add(_game.BlueFlag);
+            foreach (Flag flag in _game.Flags)
+            {
+                _objectInfo.Add(flag);
+            }
 
             foreach (IPlayer player in _game.Players)
             {

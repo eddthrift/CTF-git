@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using CTFSimulation.Tools;
 
 namespace CTFSimulation.Interfaces
@@ -7,6 +8,6 @@ namespace CTFSimulation.Interfaces
     {
         Vector Velocity { get; set; }
         int Id { get; }
-        void MovePlayer();
+        void Move();
     }
 }
