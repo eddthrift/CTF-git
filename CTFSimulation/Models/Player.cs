@@ -9,6 +9,11 @@ namespace CTFSimulation.Models
 {
     public class Player : IPlayer
     {
+        private const double AttackerPriorityCoefficient = 1.0;
+        private const double FlagPriorityCoefficient = 1.0;
+        private const double UndefendedPriorityCoefficient = 1.0;
+
+
         private Vector _velocity;
         private Vector _targetPosition;
         private double _maxSpeed;
@@ -16,6 +21,7 @@ namespace CTFSimulation.Models
         public Player(int id, ObjectTeam team)
         {
             _maxSpeed = 10;
+
             State = ObjectState.Idle;
             Team = team;
             Id = id;
@@ -26,6 +32,7 @@ namespace CTFSimulation.Models
         public Player(int id, ObjectTeam team, Vector position)
         {
             _maxSpeed = 10;
+
             State = ObjectState.Idle;
             Team = team;
             Id = id;
@@ -95,15 +102,34 @@ namespace CTFSimulation.Models
             //Look for enemy players in the attacking state
             var attackers = players.Where(player => player.Team != Team && player.State == ObjectState.Attacking);
 
+            var defenders = players.Where(player => player.Team == Team && player.State == ObjectState.Defending);
+
             //Weigh up: closest player / attacker nearest flag / attacker furthest away from another defender
             foreach (var attacker in attackers)
             {
-                var distanceToPlayer = (attacker.Position - Position).Length;
-
-                var ownFlag = flags.Single(flag => flag.Team == Team);
-
-                var distanceToFlag = (ownFlag.Position = attacker.Position).Length;
+                var attackerScore = AssessAttackerPriority(attacker, defenders, flags);
             }
+        }
+
+        private double AssessAttackerPriority(IObject attacker, IEnumerable<IObject> defenders, IList<Flag> flags)
+        {
+            var distances = new List<KeyValuePair<int, double>>();
+
+            foreach (var defender in defenders)
+            {
+                distances.Add(new KeyValuePair<int, double>(defender.Id, (attacker.Position - defender.Position).Length));
+            }
+
+            var distanceToDefender = distances.Single(distance => distance.Key == Id).Value;
+
+            var distanceToNearestDefender = distances.OrderBy(distance => distance.Value).First().Value;
+
+            var ownFlag = flags.Single(flag => flag.Team == Team);
+            var distanceToFlag = (ownFlag.Position = attacker.Position).Length;
+
+            return AttackerPriorityCoefficient * (1 / distanceToDefender) +
+                   FlagPriorityCoefficient * (1 / distanceToFlag) +
+                   UndefendedPriorityCoefficient * distanceToNearestDefender;
         }
 
         private void AttackerMove()
